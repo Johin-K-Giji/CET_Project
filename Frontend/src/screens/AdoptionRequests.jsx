@@ -31,6 +31,12 @@ const AdoptionRequests = () => {
     }
   };
 
+  // ✅ Download ID Proof
+  const downloadIdProof = (filePath) => {
+    const fileUrl = `http://localhost:5000/${filePath.replace(/\\/g, "/")}`;
+    window.open(fileUrl, "_blank");
+  };
+
   useEffect(() => {
     fetchPendingRequests();
   }, []);
@@ -47,7 +53,7 @@ const AdoptionRequests = () => {
             <tr className="bg-gray-100">
               <th className="border p-2">User Name</th>
               <th className="border p-2">Phone Number</th>
-              <th className="border p-2">Pet Type</th>
+              <th className="border p-2">Pet ID (Last 4 Digits)</th>
               <th className="border p-2">Age</th>
               <th className="border p-2">Other Pets</th>
               <th className="border p-2">Reason</th>
@@ -59,7 +65,9 @@ const AdoptionRequests = () => {
               <tr key={request._id} className="text-center">
                 <td className="border p-2">{request.userName}</td>
                 <td className="border p-2">{request.phoneNumber}</td>
-                <td className="border p-2">{request.petType}</td>
+                <td className="border p-2">
+                  {request.adoptionPostId?._id.slice(-4)} {/* Last 4 digits */}
+                </td>
                 <td className="border p-2">{request.userAge}</td>
                 <td className="border p-2">
                   {request.hasOtherPets ? "Yes" : "No"}
@@ -68,12 +76,23 @@ const AdoptionRequests = () => {
                   {request.adoptionReason}
                 </td>
                 <td className="border p-2">
+                  {/* ✅ Accept Button */}
                   <button
                     onClick={() => acceptRequest(request._id)}
-                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700"
+                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700 mr-2"
                   >
                     Accept
                   </button>
+
+                  {/* ✅ Download ID Proof Button */}
+                  {request.idProof && (
+                    <button
+                      onClick={() => downloadIdProof(request.idProof)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+                    >
+                      Download ID
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
