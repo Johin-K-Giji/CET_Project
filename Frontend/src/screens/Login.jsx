@@ -21,8 +21,25 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // ✅ Directly redirect if username and password are 'admin'
+    if (formData.username === "admin" && formData.password === "admin") {
+      sessionStorage.setItem("token", "admin-token");
+      sessionStorage.setItem("userId", "admin");
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful!",
+        text: `Welcome Admin`,
+        confirmButtonText: "Continue",
+      });
+      navigate("/admin");
+      return;
+    }
+
     try {
-      const response = await axios.post("http://localhost:5000/api/users/login", formData);
+      const response = await axios.post(
+        "http://localhost:5000/api/users/login",
+        formData
+      );
       const { token, userType, userId } = response.data;
 
       // ✅ Save token and userId in session storage
